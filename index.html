@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Learn Auth</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+
+      <!-- LEFT PANEL -->
+      <div class="auth-left">
+        <h1>Let’s Grow Your Future<br>With <span>SmartLearn</span></h1>
+        <p>
+          Learn smarter, teach better and build your future
+          with our modern learning platform.
+        </p>
+        <img src="../Frontend/images/Student and teacher.png" alt="Learning" class="student-img">
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="auth-right">
+        <!-- LOGO -->
+        <div class="form-logo">
+          <img src="../Frontend/images/Logo.png" alt="SmartLearn Logo">
+          <span>SmartLearn</span>
+          
+        </div>
+
+
+        <!-- LOGIN -->
+        <div class="form-box login active">
+          <h2>Sign in to your account</h2>
+
+          <input type="text" id="login-identifier" placeholder="Email or Username">
+          <input type="password" id="login-password" placeholder="Password">
+
+          <select id="login-role">
+            <option value="" disabled selected>Select Role</option>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+            <option value="admin">Admin</option>
+          </select>
+
+          <button id="loginBtn">Sign In</button>
+          <p class="security">🔒 Your information is securely encrypted</p>
+
+
+          <a class="forgot" id="forgotPassBtn">Forgot Password?</a>
+
+          <p>Don’t have an account?
+            <a href="#" id="showSignup">Create Account</a>
+          </p>
+        </div>
+
+        <!-- SIGNUP -->
+        <div class="form-box signup">
+          <h2>Create Account</h2>
+
+          <input type="text" id="signup-username" placeholder="Username">
+          <input type="email" id="signup-email" placeholder="Email">
+          <input type="password" id="signup-password" placeholder="Password">
+
+          <select id="signup-role">
+            <option value="" disabled selected>Select Role</option>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+            <option value="admin">Admin</option>
+          </select>
+
+          <select id="signup-gender">
+            <option value="" disabled selected>Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+
+          <div id="idProofSection" class="id-proof">
+            <label>Upload ID Proof (Teacher/Admin)</label>
+            <input type="file" id="signup-id">
+          </div>
+
+          <button id="signupBtn">Create Account</button>
+
+          <p>Already have an account?
+            <a href="#" id="showLogin">Login</a>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  
+
+  <script src="index.js"></script>
+  <script>
+   
+    document.getElementById("signup-role").addEventListener("change", function() {
+      const idProofSection = document.getElementById("idProofSection");
+      if (this.value === "teacher" || this.value === "admin") {
+        idProofSection.style.display = "block";
+      } else {
+        idProofSection.style.display = "none";
+      }
+    });
+
+    
+    //document.getElementById("sendOtpBtn").addEventListener("click", () => {
+      //alert("OTP sent to your email! (Implement backend for real OTP)");
+    //});
+  </script>
+</body>
+</html>

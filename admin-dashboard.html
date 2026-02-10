@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SmartLearn — Admin Dashboard</title>
+  <link rel="stylesheet" href="admin-dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <span class="b-white">SmartLearn</span>
+      </div>
+      <nav class="nav">
+        <button class="nav-item active" data-section="users">
+          👥User Management
+        </button>
+        <button class="nav-item" data-section="approvals">
+          ✅Teacher Approvals
+        </button>
+        <button class="nav-item" data-section="analytics">
+          📊Platform Analytics
+        </button>
+        <button class="nav-item" data-section="Doubt">
+          📈Doubt Insights or Query Analytics
+        </button>
+        <button class="nav-item" data-section="moderation">
+          🛡️Content Moderation
+        </button>
+        <button class="nav-item" data-section="teacher-lectures">
+          📺Lecture Management
+        </button>
+        <button class="nav-item" data-section="settings">⚙️Admin Settings</button>
+      </nav>
+    </div>
+    <div class="sidebar-footer">
+      <button id="logoutBtn" class="logout">🚪 Logout</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="left">
+        <div class="welcome">Welcome, Admin 👑</div>
+        <div class="sub">You have full control over SmartLearn</div>
+      </div>
+      <div class="right-controls">
+        <input id="searchInput" placeholder="Search username or email..." />
+        <select id="roleFilter">
+          <option value="">All roles</option>
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+          <option value="admin">Admin</option>
+        </select>
+        <button id="refreshBtn" class="btn">Refresh</button>
+      </div>
+    </header>
+
+    <section class="sections">
+      <!-- USERS -->
+      <section id="users" class="section active-section">
+        <div class="stats">
+          <div class="stat-card">
+            <h3 id="statTotal">0</h3>
+            <p>Total Users</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="statStudents">0</h3>
+            <p>Students</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="statTeachers">0</h3>
+            <p>Teachers</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="statPending">0</h3>
+            <p>Pending Approvals</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>All Users</h3>
+          <table class="user-table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="userTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- APPROVALS -->
+      <section id="approvals" class="section">
+        <div class="card">
+          <h3>Pending Teacher Approvals</h3>
+          <table class="user-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>ID Proof</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="approvalTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+      <!-- Teacher Lectures Section -->
+      <section id="teacher-lectures" class="section">
+        <!-- Header -->
+        <div class="lectures-header">
+          <div>
+            <h2>📚 Teacher Lectures</h2>
+            <p>Manage and moderate all teacher uploaded videos</p>
+          </div>
+
+          <div class="lectures-actions">
+            <input type="text" placeholder="Search teacher or video..." />
+            <select>
+              <option>All</option>
+              <option>Active</option>
+              <option>Blocked</option>
+            </select>
+            <button class="refresh-btn">Refresh</button>
+          </div>
+        </div>
+
+        <!-- Video Grid -->
+        <div class="lectures-grid">
+          <!-- Video Card -->
+          <div class="lecture-card">
+            <div class="video-frame">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+              <span class="status active">Active</span>
+            </div>
+
+            <div class="lecture-content">
+              <h3>Introduction to Networking</h3>
+
+              <p class="teacher-name">
+                👨‍🏫 Rahul Sharma
+                <span>rahul@gmail.com</span>
+              </p>
+
+              <div class="lecture-actions">
+                <button class="btn edit">Edit</button>
+                <button class="btn block">Block</button>
+                <button class="btn delete">Delete</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Blocked Card -->
+          <div class="lecture-card blocked">
+            <div class="video-frame">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+              <span class="status blocked">Blocked</span>
+            </div>
+
+            <div class="lecture-content">
+              <h3>Cybersecurity Basics</h3>
+
+              <p class="teacher-name">
+                👨‍🏫 Neha Verma
+                <span>neha@gmail.com</span>
+              </p>
+
+              <div class="lecture-actions">
+                <button class="btn edit">Edit</button>
+                <button class="btn unblock">Unblock</button>
+                <button class="btn delete">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS -->
+      <section id="analytics" class="section">
+        <div class="grid">
+          <div class="card">
+            <h3>Role Distribution</h3>
+            <canvas id="roleChart"></canvas>
+          </div>
+          <div class="card">
+            <h3>Approval Status</h3>
+            <canvas id="approvalChart"></canvas>
+          </div>
+          <div class="card">
+            <h3>User Growth (last 7 days)</h3>
+            <canvas id="userGrowthChart"></canvas>
+          </div>
+          <div class="card">
+            <h3>Active Usage (sample)</h3>
+            <canvas id="usageChart"></canvas>
+          </div>
+        </div>
+      </section>
+      <!-- ================= DOUBT ANALYTICS ================= -->
+      <section id="Doubt" class="section">
+        <h2>📊 Doubt Analytics</h2>
+
+        <!-- KPI Cards -->
+        <div class="analytics-cards">
+          <div class="card">
+            <h3>Total Doubts</h3>
+            <p id="totalDoubts">0</p>
+          </div>
+
+          <div class="card pending">
+            <h3>Pending Doubts</h3>
+            <p id="pendingDoubts">0</p>
+          </div>
+
+          <div class="card answered">
+            <h3>Answered Doubts</h3>
+            <p id="answeredDoubts">0</p>
+          </div>
+
+          <div class="card time">
+            <h3>Avg Response Time</h3>
+            <p id="avgTime">0 min</p>
+          </div>
+        </div>
+
+        <!-- Leaderboards -->
+        <div class="analytics-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Question</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="doubtAnalyticsBody">
+              <!-- doubts will load here -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <!-- =================================================== -->
+
+      <!-- MODERATION -->
+      <section id="moderation" class="section">
+        <div class="card">
+          <h3>Content Moderation</h3>
+          <table class="user-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Author</th>
+                <th>Type</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="moderationBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <!-- SETTINGS -->
+      <section id="settings" class="section">
+        <div class="section-head">
+          <div>
+            <h2>Admin Settings</h2>
+            <p class="muted">Control platform-wide settings for SmartLearn</p>
+          </div>
+        </div>
+
+        <div class="grid settings-grid">
+
+          <!-- Platform -->
+          <div class="card">
+            <h3>Platform</h3>
+
+            <label>Platform name</label>
+            <input id="platformName" value="SmartLearn" />
+
+            <label>Support email</label>
+            <input id="supportEmail" value="smartlearn526@gmail.com" />
+
+            <label class="row">
+              <input id="maintenanceMode" type="checkbox" />
+              Maintenance mode
+            </label>
+
+            <label class="row">
+              <input id="enableSignup" type="checkbox" checked />
+              Allow new signups
+            </label>
+
+            <div class="card-actions">
+              <button class="btn btn-primary" id="savePlatform">Save</button>
+            </div>
+          </div>
+
+          <!-- Security -->
+          <div class="card">
+            <h3>Security</h3>
+
+            <label class="row">
+              <input id="emailVerification" type="checkbox" checked />
+              Require email verification
+            </label>
+
+            <label>Session timeout (minutes)</label>
+            <input id="sessionTimeout" type="number" value="60" min="10" />
+
+            <label>Max login attempts</label>
+            <input id="maxAttempts" type="number" value="5" min="3" />
+
+            <div class="card-actions">
+              <button class="btn btn-primary" id="saveSecurity">Save</button>
+            </div>
+          </div>
+
+          <!-- Uploads -->
+          <div class="card">
+            <h3>Uploads</h3>
+
+            <label>Max upload size</label>
+            <select id="maxUpload">
+              <option value="10">10 MB</option>
+              <option value="20">20 MB</option>
+              <option value="50">50 MB</option>
+            </select>
+
+            <label>Allowed file types</label>
+            <select id="allowedTypes">
+              <option value="pdf">PDF only</option>
+              <option value="pdf_image">PDF + Images</option>
+            </select>
+
+            <label class="row">
+              <input id="autoCleanup" type="checkbox" checked />
+              Auto-clean expired content
+            </label>
+
+            <div class="card-actions">
+              <button class="btn btn-primary" id="saveUploads">Save</button>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="card danger">
+            <h3>Danger Zone</h3>
+            <p class="muted">Be careful — these actions can’t be undone.</p>
+
+            <div class="danger-actions">
+              <button class="btn btn-outline" id="clearUploads">Clear temp uploads</button>
+              <button class="btn btn-danger" id="disablePlatform">Disable platform</button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- Edit Modal -->
+      <div id="editModal" class="modal">
+        <div class="box">
+          <h3>Edit User</h3>
+          <input id="editId" type="hidden" />
+          <label>Username</label>
+          <input id="editUsername" />
+          <label>Email</label>
+          <input id="editEmail" />
+          <label>Role</label>
+          <select id="editRole">
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+            <option value="admin">Admin</option>
+          </select>
+          <label>Status</label>
+          <select id="editStatus">
+            <option value="pending">pending</option>
+            <option value="approved">approved</option>
+            <option value="rejected">rejected</option>
+          </select>
+          <div class="flex-row" style="justify-content: flex-end">
+            <button id="saveEdit" class="btn">Save</button>
+            <button id="cancelEdit" class="btn ghost">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <script src="admin-dashboard.js"></script>
+</body>
+
+</html>

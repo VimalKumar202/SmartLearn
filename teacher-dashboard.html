@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartLearn — Teacher Dashboard</title>
+  <link rel="stylesheet" href="teacher-dashboard.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <aside id="sidebar" class="sidebar">
+    <div>
+      <div class="brand">
+        <span class="b-white">SmartLearn</span>
+      </div>
+      <nav class="nav">
+        <button class="nav-item active" data-section="home">
+          🏠 Overview
+        </button>
+        <button class="nav-item" data-section="announcements">
+          📢Doubts & Notices
+        </button>
+        <button class="nav-item" data-section="upload">
+          📂Learning Materials
+        </button>
+        <button class="nav-item" data-section="Upload YouTube Video">
+          📺My Classes
+        </button>
+        <button class="nav-item" data-section="progress">
+          📊Progress Tracker
+        </button>
+
+        <button class="nav-item" data-section="studentProfiles">
+          🧑‍🎓Student Insights
+        </button>
+
+        <!--<button class="nav-item" data-section="Video">Video</button>-->
+        <button class="nav-item" data-section="settings">⚙️Help & Support</button>
+      </nav>
+    </div>
+    <div class="sidebar-footer">
+      <button id="logoutBtn" class="logout">🚪 Logout</button>
+      <!-- ✅ Support Email -->
+      <div class="support-footer">
+        Need help?
+        <a id="supportEmailLink" href="#">smartlearn526@gmail.com</a>
+      </div>
+    </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="left">
+        <button id="hamburger" class="hamburger">☰</button>
+        <div>
+          <div class="welcome">
+            Welcome, <span id="Username">Teacher</span> 👋
+          </div>
+          <div class="sub">Empower your students with SmartLearn</div>
+        </div>
+      </div>
+      <div class="right">
+        <!--input
+            id="search"
+            class="search"
+            placeholder="Search students, notes..."
+          /-->
+        <div id="topAvatar" class="avatar"></div>
+      </div>
+    </header>
+
+    <section id="sections" class="sections">
+      <section id="home" class="section active-section">
+
+        <!-- ===== Stats Cards ===== -->
+        <div class="stats-grid">
+          <div class="stat-card gradient-blue">
+            <div class="stat-icon">👨‍🎓</div>
+            <div>
+              <h4>Total Students</h4>
+              <p id="totalStudents">--</p>
+            </div>
+          </div>
+
+
+
+          <div class="stat-card gradient-orange">
+            <div class="stat-icon">❓</div>
+            <div>
+              <h4>Pending Doubts</h4>
+              <p id="pendingDoubts">--</p>
+            </div>
+          </div>
+
+          <div class="stat-card gradient-purple">
+            <div class="stat-icon">📚</div>
+            <div>
+              <h4> Total Notes</h4>
+              <p id="notesThisWeek">--</p>
+            </div>
+          </div>
+          <div class="stat-card gradient-pink">
+            <div class="stat-icon">📝</div>
+            <div>
+              <h4>Total Assignments</h4>
+              <p id="totalAssignments">--</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== Recent Activity ===== -->
+        <div class="activity-grid">
+
+          <!-- Latest Student Doubts -->
+          <div class="card">
+            <h3>❓ Latest Student Doubts</h3>
+
+          </div>
+        </div><br>
+
+
+      </section>
+
+
+      <section id="upload" class="section">
+        <h2>Upload Notes, Assignments</h2>
+
+
+        <div class="card">
+          <label>Title</label>
+          <input type="text" id="uploadTitle" placeholder="Enter title" />
+          <label>Subject</label>
+          <input type="text" id="uploadSubject" placeholder="e.g. Computer Networks" />
+
+          <label>Type</label>
+          <select id="contentType">
+            <option value="Note">Notes</option>
+            <option value="Assignment">Assignment</option>
+          </select>
+
+          <label>Upload File</label>
+          <input type="file" id="uploadFile" accept=".pdf,.jpg,.jpeg,.png,.webp,.docx" />
+
+          <div class="card-actions">
+            <button id="uploadBtn" class="btn">Upload</button>
+          </div>
+        </div><br>
+        <div id="myContent" class="content-list"></div>
+
+
+      </section>
+
+
+      <section id="progress" class="section">
+        <h2>Monitor Student Progress</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Class Average Performance</h3>
+            <canvas id="classPerformance"></canvas>
+          </div>
+          <div class="card">
+            <h3>Weak Topics</h3>
+            <ul id="weakTopics" class="list"></ul>
+          </div>
+        </div>
+      </section>
+      <section id="Upload YouTube Video" class="section">
+        <hr style="margin: 30px 0" />
+
+        <!-- =========================
+              UPLOAD VIDEO FORM
+             ========================== -->
+        <h3>📺 Upload YouTube Video</h3>
+
+        <div class="form-group">
+          <label>Video Title</label>
+          <input type="text" id="videoTitle" placeholder="Enter video title" />
+        </div>
+
+        <div class="form-group">
+          <label>YouTube Video URL</label>
+          <input type="text" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=..." />
+        </div>
+
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" id="videoSubject" placeholder="Physics, Maths, DBMS" />
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="videoDescription" placeholder="Short description"></textarea>
+        </div>
+
+        <button id="uploadVideoBtn" class="btn btn-primary">
+          Upload Video
+        </button>
+
+        <!-- =========================
+                MY UPLOADED VIDEOS
+              ========================== -->
+        <hr style="margin: 40px 0" />
+
+        <h3>📂 My Uploaded Videos</h3>
+        <div class="video-filter-bar">
+          <input type="text" id="videoSearchInput" placeholder="🔍 Search videos..." />
+
+          <select id="subjectFilter">
+            <option value="">All Subjects</option>
+            <!-- Subjects can be auto-filled via JS -->
+          </select>
+        </div>
+
+        <!-- JS WILL AUTO-FILL THIS -->
+        <div id="myUploadedVideos" class="video-grid"></div>
+      </section>
+
+
+      <section id="announcements" class="section">
+        <div class="section-head">
+          <h2>📢 Doubts & Announcements</h2>
+          <p class="muted">Manage student doubts and post announcements</p>
+        </div>
+
+        <div class="announcements-grid">
+
+          <!-- ANNOUNCEMENT CARD -->
+          <div class="card announcement-card">
+            <h3>📣 Post Announcement</h3>
+
+            <textarea id="announcementText" class="announcement-input"
+              placeholder="Write an important announcement for students..."></textarea>
+
+            <div class="file-upload">
+              <label class="file-btn">
+                📎 Attach PDF / Image
+                <input id="announcementFile" type="file" accept=".pdf,image/png,image/jpeg" hidden />
+              </label>
+              <span id="fileName" class="file-name">No file selected</span>
+            </div>
+
+            <button id="postAnnouncementBtn" class="btn primary full">
+              Post Announcement
+            </button>
+          </div>
+          <!-- MY ANNOUNCEMENTS -->
+          <div class="card my-announcements-card">
+            <h3>🗂 My Announcements</h3>
+
+            <div id="myAnnouncements" class="announcement-list">
+              <p class="muted">Loading announcements...</p>
+            </div>
+          </div>
+
+
+
+          <!-- STUDENT DOUBTS -->
+          <div class="card doubts-card" id="teacherDoubts">
+
+            <h3>🎓 Student Doubts</h3>
+
+
+      </section>
+
+
+      <section id="studentProfiles" class="section">
+        <h2>🎓 Student Profiles & Performance</h2>
+
+        <div class="profile-grid">
+          <!-- STUDENT LIST -->
+          <div class="card">
+            <h3>All Students</h3>
+            <ul id="studentList" class="student-list"></ul>
+          </div>
+
+          <!-- STUDENT DETAILS -->
+          <div id="studentDetails" class="student-details">
+
+            <button id="closeStudentDetails" class="close-btn">✖</button>
+
+            <h3 id="studentNameTitle">Student Name</h3>
+            <p id="studentEmail">student@email.com</p>
+
+            <hr />
+
+            <h4>📊 Performance Overview</h4>
+            <canvas id="studentChart" height="150"></canvas>
+
+            <hr />
+
+            <h4>⚠ Weak Topics</h4>
+            <ul id="studentWeakTopics"></ul>
+
+          </div>
+      </section>
+      <button id="askAiBtn" class="ask-ai-toggle" title="Ask AI">
+        💬 SmartLearn AI
+      </button>
+
+      <aside id="askAiPanel" class="ask-ai-panel" aria-hidden="true">
+        <div class="ask-ai-header">
+          <h3>SmartLearn Assistant</h3>
+          <button id="closeAskAi" class="close-ai">✖</button>
+        </div>
+        <div id="aiChatBox" class="ai-chat-box">
+
+        </div>
+        <div class="ai-input">
+          <input id="aiInput" placeholder="Type your question..." />
+          <button id="aiSend" class="btn">Send</button>
+        </div>
+      </aside>
+      <section id="settings" class="section">
+        <div class="section-head">
+          <h2>Help & Support</h2>
+          
+          <!-- SUPPORT -->
+          <div class="card">
+            <h3>Support</h3>
+            <p class="muted">Need help? Contact SmartLearn support.</p>
+            <p>
+              📩 <a id="supportEmailLink" href="#">smartlearn526@gmail.com</a>
+            </p>
+
+            <div class="card-actions">
+              <button class="btn" id="reportIssueBtn">Report an Issue</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+  </main>
+
+  <script src="teacher-dashboard.js"></script>
+</body>
+
+</html>

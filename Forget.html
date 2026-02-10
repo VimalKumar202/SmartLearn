@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password | SmartLearn</title>
+  <link rel="stylesheet" href="Forget.css" />
+</head>
+
+<body>
+  <main class="auth-wrap">
+    <section class="auth-card">
+
+      <!-- LEFT PANEL (like login page) -->
+      <div class="auth-left">
+        <div class="brand">
+          <span class="brand-smart">SmartLearn</span>
+        </div>
+
+        <h1>Forgot your password?</h1>
+        <p>
+          No worries. Enter your registered email and we’ll send you a reset link.
+        </p>
+
+        <div class="left-badges">
+          <div class="badge">🔒 Secure</div>
+          <div class="badge">📩 Email link</div>
+          <div class="badge">⚡ Quick reset</div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL (form card) -->
+      <div class="auth-right">
+        <div class="form-head">
+          <h2>Forgot Password</h2>
+          <p class="muted">We will send a password reset link to your email.</p>
+        </div>
+
+        <label class="field">
+          <span>Email</span>
+          <input type="email" id="email" placeholder="Enter your registered email" required />
+        </label>
+
+        <button id="resetBtn" class="btn btn-primary">Send Reset Link</button>
+
+        <p id="msg" class="msg"></p>
+
+        <div class="form-footer">
+          <a class="link" href="index.html">← Back to Sign In</a>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    document.getElementById("resetBtn").addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      const msg = document.getElementById("msg");
+      const btn = document.getElementById("resetBtn");
+
+      msg.textContent = "";
+      msg.className = "msg";
+
+      if (!email) {
+        msg.textContent = "Please enter your email.";
+        msg.classList.add("error");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Sending...";
+
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/forgot-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+
+        const data = await res.json();
+
+        msg.textContent = data.message || "Check your email for reset link!";
+        msg.classList.add(data.success ? "success" : "error");
+      } catch (err) {
+        msg.textContent = "Something went wrong. Try again later.";
+        msg.classList.add("error");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Send Reset Link";
+      }
+    });
+  </script>
+</body>
+</html>

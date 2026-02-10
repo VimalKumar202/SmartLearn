@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SmartLearn — Student Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+
+  <link rel="stylesheet" href="student-dashboard.css" />
+</head>
+
+<body>
+  <aside id="sidebar" class="sidebar">
+    <div>
+      <div class="brand">
+        <span class="b-white">SmartLearn</span>
+      </div>
+      <nav class="nav">
+        <button class="nav-item active" data-section="home">
+          🏠 Dashboard(Home)
+        </button>
+        <button class="nav-item" data-section="planner">
+          📅 Study Planner
+        </button>
+        <button class="nav-item" data-section="doubts">
+          📂Doubts & Announcements
+        </button>
+        <button class="nav-item" data-section="yt-video">
+          ▶️ Learning Hub
+        </button>
+        <button class="nav-item" data-section="notes">
+          📂 My Notes
+        </button>
+        <button class="nav-item" data-section="ai-quizzes">
+          🧠 Smart Quiz
+        </button>
+        <button class="nav-item" data-section="ai-notes">
+          📝 AI Notes
+        </button>
+
+        <button class="nav-item" data-section="quizzes">
+          📊 Performance Report
+        </button>
+       
+        <button class="nav-item" data-section="settings">⚙️ Settings</button>
+      </nav>
+    </div>
+<div class="sidebar-footer">
+  <button id="logoutBtn" class="logout">🚪 Logout</button>
+  <!-- ✅ Support Email -->
+  <div class="support-footer">
+    Need help?
+    <a id="supportEmailLink" href="#">smartlearn526@gmail.com</a>
+  </div>
+</div>
+</div>
+</aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="left">
+        <button id="hamburger" class="hamburger">☰</button>
+        <div>
+          <div class="welcome">
+            Welcome, <span id="Username">Student</span> 👋
+          </div>
+          <div class="sub">Keep pushing — you're doing great!</div>
+        </div>
+      </div>
+
+
+      <div class="right">
+
+        <div id="topAvatar" class="avatar"></div>
+      </div>
+    </header>
+
+    <section id="home" class="section active-section">
+      <div class="grid">
+
+        <!-- 👤 PROFILE SUMMARY -->
+        <div class="card profile-card">
+          <h3>Welcome 👋</h3>
+          <p class="profile-name" id="profileName">Loading...</p>
+
+        </div>
+
+        <!-- 📊 QUICK STATS -->
+        <div class="card kpi-card">
+          <h3>Quick Stats</h3>
+
+          <div class="kpi-row">
+            <div class="pill">
+              <div class="num" id="statQuizzes">12</div>
+              <div class="label">Quizzes</div>
+            </div>
+            <div class="pill">
+              <div class="num" id="statAvg">82%</div>
+              <div class="label">Avg Score</div>
+            </div>
+            <div class="pill">
+              <div class="num" id="statTime">14h</div>
+              <div class="label">Study Time</div>
+            </div>
+          </div>
+
+          <div class="chart-wrap">
+            <canvas id="homeProgressChart"></canvas>
+          </div>
+
+          <div class="card-actions">
+            
+            <button class="btn ghost" data-section="planner">Open Planner</button>
+          </div>
+        </div>
+
+        
+
+        <!-- 📝 RECENT ACTIVITY -->
+        <div class="card">
+          <h3>Recent Activity</h3>
+          <ul class="list" id="recentActivity">
+            <li>✔ CS Quiz – <strong>90%</strong></li>
+            <li>📄 Downloaded AI Notes</li>
+            <li>❓ Asked a doubt (Physics)</li>
+            <li>🤖 Generated AI Quiz</li>
+          </ul>
+        </div>
+
+        
+
+        <!-- 📅 UPCOMING TASKS -->
+        <div class="card">
+          <h3>Upcoming Tasks</h3>
+
+          <ul id="dashboardUpcomingTasks" class="task-list"></ul>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="doubts" class="section">
+      <div class="section-head">
+        <h2>❓ Ask Doubts & 📢 Announcements</h2>
+      </div>
+
+      <div class="grid">
+
+        <!-- ANNOUNCEMENTS -->
+        <div class="card" style="grid-column: 1 / -1">
+          <h3>📢 Announcements</h3>
+          <div id="announcementList"></div>
+        </div>
+
+        <!-- ASK DOUBT -->
+        <div class="card">
+          <h3>❓ Ask a Doubt</h3>
+          <textarea id="doubtInput" class="doubt-input"></textarea>
+          <button id="submitDoubt" class="btn">Submit Doubt</button>
+
+          <div id="myDoubts"></div>
+
+        </div>
+
+
+    </section>
+    <section id="ai-quizzes" class="section ai-quizzes">
+
+      <div class="section-head ai-head">
+        <div>
+          <h2 class="ai-title">🧠 AI Generated Quizzes</h2>
+          <p class="ai-subtitle">Create smart quizzes powered by AI</p>
+        </div>
+
+        <button id="generateQuizBtn" class="btn btn-primary" onclick="openQuizModal()">
+          + Generate Quiz
+        </button>
+      </div>
+
+      <!-- ✅ Grid layout -->
+      <div id="quizList" class="quiz-grid"></div>
+
+      <!-- ✅ Quiz Player Card -->
+      <div id="quizPlayer" class="quiz-player" style="display:none;">
+
+        <div class="quiz-player-head">
+          <h2 id="quizTitle"></h2>
+          <button class="btn btn-ghost" onclick="closeQuizPlayer()">✖ Close</button>
+        </div>
+
+        <form id="quizForm" class="quiz-form"></form>
+
+        <div class="quiz-player-actions">
+          <button class="btn btn-primary" onclick="submitCurrentQuiz()">Submit Quiz</button>
+          <!--button class="btn btn-secondary" onclick="downloadPDF()">📄 Download PDF</button>-->
+        </div>
+
+      </div>
+
+
+      <!-- ⭐ PDF ONLY CONTAINER (keep same) -->
+      <div id="pdfContainer" class="pdf-print-layer">
+        <div class="pdf-header">
+          <h1 id="pdfTopic"></h1>
+          <div class="pdf-brand"><!-- optional brand/logo --></div>
+        </div>
+        <div id="pdfQuizContent"></div>
+      </div>
+
+    </section>
+
+
+    <!-- AI Quiz Modal (GLOBAL) -->
+    <div id="aiQuizModal" class="modal-overlay">
+      <div class="modal-box">
+
+        <!-- Header -->
+        <div class="modal-header">
+          <h3>🧠 Generate AI Quiz</h3>
+          <button class="close-btn" onclick="closeQuizModal()">✕</button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label>Topic</label>
+            <input id="quizTopic" type="text" placeholder="e.g. IP Addressing, JavaScript, Cyber Security">
+          </div>
+
+          <div class="form-group">
+            <label>Difficulty Level</label>
+            <select id="quizDifficulty">
+              <option>Easy</option>
+              <option>Medium</option>
+              <option>Hard</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Number of Questions</label>
+            <select id="quizCount">
+              <option>5</option>
+              <option>10</option>
+              <option>15</option>
+              <option>20</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Question Type</label>
+            <select id="quizType">
+              <option value="MCQ">MCQ</option>
+              <option value="TRUE_FALSE">True / False</option>
+              <option value="MIXED">Mixed</option>
+              <option value="SHORT">Short Answer</option>
+            </select>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+          <button class="cancel-btn" onclick="closeQuizModal()">Cancel</button>
+          <button class="generate-btn" onclick="generateAiQuiz()">🚀 Generate Quiz</button>
+        </div>
+
+      </div>
+    </div>
+    </section>
+
+
+
+    <section id="ai-notes" class="section">
+      <div class="ai-notes-wrapper">
+
+        <!-- Header -->
+        <div class="ai-notes-header">
+          <h2>🤖 AI Notes Generator</h2>
+          <p>Upload your study material and let AI create smart notes instantly.</p>
+        </div>
+
+        <!-- Upload Card -->
+        <div class="ai-upload-card">
+          <h3>📄 Upload Document</h3>
+          <p class="file-info">Supports PDF, DOCX, PPT • Max 10MB</p>
+
+          <label class="upload-area">
+            <input type="file" id="aiFileInput" hidden />
+            <div class="upload-content">
+              <span class="upload-icon">⬆️</span>
+              <span>Drag & drop or click to upload</span>
+            </div>
+          </label>
+        </div>
+
+        <!-- AI Actions -->
+        <div class="ai-actions">
+          <button type="button" class="ai-btn" data-type="summary">📝 Generate Summary</button>
+          <button type="button" class="ai-btn" data-type="keypoints">📌 Key Points</button>
+          <button type="button" class="ai-btn" data-type="questions">❓ Practice Questions</button>
+          <button type="button" class="ai-btn" data-type="easy">🧠 Easy Explanation</button>
+        </div>
+
+        <!-- Output Section -->
+        <div class="ai-output">
+          <h3>📘 AI Generated Notes</h3>
+          <div class="output-box">
+            <p class="placeholder-text">
+              Your AI-generated notes will appear here after processing...
+            </p>
+          </div>
+
+          <div class="output-actions">
+            <button type="button" class="save-btn">💾 Save to My Notes</button>
+            <button type="button" class="download-btn">⬇️ Download PDF</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <section id="notes" class="section">
+      <div class="section-head">
+        <h2>My Notes & Summaries</h2>
+      </div>
+
+      <!-- Top Controls -->
+      <div class="notes-controls">
+        <input type="text" id="searchNotes" placeholder="Search notes or subjects..." />
+
+
+
+        <button class="btn" onclick="openUploadModal()">➕ Upload Note</button>
+      </div>
+      <div class="grid">
+        <!-- Notes List -->
+        <div class="card">
+          <h3>My Notes</h3>
+          <ul class="list" id="notesList">
+          
+            <!-- Dynamic -->
+            </ul>
+            </div>
+            <!-- Teacher Learning Materials (NEW — DO NOT TOUCH NOTES) -->
+            <div class="card">
+              <h3>📚 Teacher Learning Materials</h3>
+              <div id="teacherMaterialsList">
+                <p class="muted">Loading materials...</p>
+              </div>
+            </div>
+            </div> <!-- end of grid -->
+
+    </section>
+
+    <!-- Upload Modal -->
+    <div class="modal" id="uploadModal">
+      <div class="modal-box">
+        <h3>Upload Note</h3>
+
+        <input id="noteTitle" placeholder="Note title" />
+        <input id="noteSubject" placeholder="Subject (DSA, ML...)" />
+        <input type="file" id="noteFile" />
+
+        <div class="modal-actions">
+          <button class="btn" onclick="uploadNote()">Upload</button>
+          <button class="btn outline" onclick="closeUploadModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+
+    <section id="quizzes" class="section">
+
+      <!-- HEADER -->
+      <!-- HEADER -->
+      <div class="report-header">
+        <h2>📘 My Learning Report</h2>
+        <p class="muted">Complete overview of your activity & performance</p>
+      </div>
+
+      <!-- KPI SUMMARY -->
+      <div class="report-kpis">
+        <div class="kpi">
+          <h3 id="totalQuizzes">—</h3>
+          <p>Quizzes Attempted</p>
+        </div>
+
+        <div class="kpi">
+          <h3 id="avgScore">—%</h3>
+          <p>Average Score</p>
+        </div>
+
+        <div class="kpi">
+          <h3 id="learningTime">—</h3>
+          <p>Learning Time</p>
+        </div>
+
+        <div class="kpi">
+          <h3 id="streak">— days</h3>
+          <p>Active Streak</p>
+        </div>
+      </div>
+
+      <!-- PERFORMANCE CHART -->
+      <div class="card full">
+        <div class="card-head">
+          <h3>📈 Performance Trend</h3>
+          <span class="chip" id="trendHint">Last 10 attempts</span>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="performanceChart" height="120"></canvas>
+        </div>
+
+        <!-- fallback text if no data -->
+        <p class="muted small" id="chartEmpty" style="display:none; margin-top:10px;">
+          No quiz attempts yet. Start a quiz to see your performance trend.
+        </p>
+      </div>
+
+      <!-- REPORT GRID -->
+      <div class="report-grid">
+
+        <!-- TOPIC PERFORMANCE -->
+        <div class="card">
+          <div class="card-head">
+            <h3>📊 Topic-wise Performance</h3>
+            <span class="chip" id="topicHint">From Performance</span>
+          </div>
+
+          <ul class="performance-list" id="topicList">
+            <!-- JS will render -->
+            <li class="muted">No topic data yet <span class="avg">—</span></li>
+          </ul>
+        </div>
+
+        <!-- STRENGTH & WEAKNESS -->
+        <div class="card" id="insightsCard">
+          <h3>💪 Strengths & ⚠ Weak Areas</h3>
+
+          <p id="strengthText"><strong>Strength:</strong> —</p>
+          <p id="weakText"><strong>Needs Improvement:</strong> —</p>
+        </div>
+
+        <!-- ACTIVITY TIMELINE -->
+        <div class="card">
+          <div class="card-head">
+            <h3>🕒 Recent Activity</h3>
+            <span class="chip" id="activityHint">Latest</span>
+          </div>
+
+          <ul class="activity-list" id="activityList">
+            <!-- JS will render -->
+            <li class="muted">No recent activity</li>
+          </ul>
+        </div>
+
+      </div>
+
+
+    </section>
+
+    <section id="planner" class="section">
+
+      <div class="section-head">
+        <h2>STUDY PLANNER</h2>
+        <button class="btn ghost" id="toggleDarkMode">🌙 Dark</button>
+      </div>
+
+      <div class="grid">
+
+        <!-- ADD TASK -->
+        <div class="card">
+          <h3>Add Task</h3>
+
+          <input id="subject" placeholder="Subject" />
+          <input id="title" placeholder="Task title" />
+
+          <select id="priority">
+            <option value="low">Low Priority</option>
+            <option value="medium" selected>Medium Priority</option>
+            <option value="high">High Priority</option>
+          </select>
+
+          <input type="date" id="date" />
+          <input type="time" id="time" />
+
+          <button class="btn" id="saveTask">Save Task</button>
+        </div>
+
+        <!-- TODAY -->
+        <div class="card">
+          <h3>Today Tasks</h3>
+          <ul id="plannerTodayTasks" class="task-list"></ul>
+        </div>
+
+        <!-- UPCOMING -->
+        <div class="card">
+          <h3>Upcoming Tasks</h3>
+          <ul id="plannerUpcomingTasks" class="task-list"></ul>
+        </div>
+
+
+
+    </section>
+    <!-- EDIT MODAL -->
+    <div id="editTaskModal" class="modal hidden">
+      <div class="modal-content">
+        <h3>Edit Task</h3>
+
+        <input id="editSubject" placeholder="Subject" />
+        <input id="editTitle" placeholder="Task Title" />
+
+        <select id="editPriority">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <input type="date" id="editDate" />
+        <input type="time" id="editTime" />
+
+        <div class="modal-actions">
+          <button class="btn" id="updateTaskBtn">Update</button>
+          <button class="btn ghost" id="closeEditModal">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+
+    <section id="chatbot" class="section">
+      <div class="section-head">
+        <h2>Doubt Chatbot</h2>
+        <div class="controls">
+          <div class="muted">Demo assistant</div>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="card" style="grid-column: 1/-1">
+          <div id="chatBox" class="chat-box">
+            <div class="msg ai">Hi! Ask me any doubt.</div>
+          </div>
+          <div class="chat-input">
+            <input id="chatInput" placeholder="Type your doubt..." /><button class="btn" id="sendChat">
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+
+    <section id="settings" class="section">
+      <div class="section-head">
+        <h2>Settings</h2>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h3>Profile</h3>
+          <label>Display name</label><input id="displayName" value="" /><br /><label>Email</label><input id="email"
+            value="" />
+          <div class="card-actions">
+            <button class="btn" id="saveProfile">Save Profile</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Preferences</h3>
+          <label><input id="toggleSound" type="checkbox" checked /> Sound
+            notifications</label>
+        </div>
+      </div>
+       <!-- SUPPORT -->
+          <div class="card">
+            <h3>Support</h3>
+            <p class="muted">Need help? Contact SmartLearn support.</p>
+            <p>
+              📩 <a id="supportEmailLink" href="#">smartlearn526@gmail.com</a>
+            </p>
+
+            <div class="card-actions">
+              <button class="btn" id="reportIssueBtn">Report an Issue</button>
+            </div>
+          </div>
+        </div>
+    </section>
+    </section>
+    <!-- YT VIDEO SECTION -->
+    <section id="yt-video" class="section">
+      <div class="section-head">
+        <h2>🎥 Learning Videos</h2>
+        <div class="controls">
+          <input id="ytSearchInput" type="text" placeholder="Search topic (DBMS, OS, CN)" />
+          <button class="btn" id="ytSearchBtn">Search</button>
+        </div>
+      </div>
+
+      <div class="video-tabs">
+        <button class="tab active" data-source="teacher">
+          Teacher Videos
+        </button>
+        <button class="tab" data-source="youtube">Explore YouTube</button>
+      </div>
+
+      <div id="videoGrid" class="video-grid"></div>
+    </section>
+  </main>
+
+  <button id="askAiBtn" class="ask-ai-toggle" title="Ask AI">
+    💬 SmartLearn AI
+  </button>
+
+  <aside id="askAiPanel" class="ask-ai-panel" aria-hidden="true">
+    <div class="ask-ai-header">
+      <h3>SmartLearn Assistant</h3>
+      <button id="closeAskAi" class="close-ai">✖</button>
+    </div>
+    <div id="aiChatBox" class="ai-chat-box">
+
+    </div>
+    <div class="ai-input">
+      <input id="aiInput" placeholder="Type your question..." />
+      <button id="aiSend" class="btn">Send</button>
+    </div>
+  </aside>
+
+  <div id="loginOverlay" class="overlay hidden">
+    <div class="login-card">
+      <h2>Sign in</h2>
+      <input id="loginName" placeholder="Your name" />
+      <select id="loginGender">
+        <option value="">Select gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <label style="font-size: 13px; color: #666; margin-top: 8px">(Optional) Upload profile image</label>
+      <input id="loginAvatarFile" type="file" accept="image/*" />
+      <div style="
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+          ">
+        <button id="loginSubmit" class="btn">Login</button>
+        <button id="loginCancel" class="btn ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <script src="student-dashboard.js"></script>
+  <script src="Student-ai notes.js"></script>
+
+</body>
+
+</html>
